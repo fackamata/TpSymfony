@@ -1,6 +1,6 @@
 # Tp Symfony
 
-## création base de donnnées 
+## création base de données 
 
 voir les fichiers :
  - modeleBdd.png
@@ -82,8 +82,98 @@ access_control:
 ```
 pour contrôler l'accès au chemin commençant par /admin,  on définit l'acces_control comme ci-dessus dans le fichier security.yaml situé dans le dossier /config/packages/
 
+## récupération des tables liées
+
+on ajoute dans les entitées type et artiste :
+```php
+public function __toString(): string
+    {
+        return $this->getNom();
+    }
+```
+
+Pour les récupérer dans le formulaire de l'entité Oeuvre.
+
+Egalement dans les entitées User, Lieu et Oeuvre, pour les récupérer dans le formulaire de l'entité Evenement.
+
+## gestion des images
+
+on stock l'endroit où on va stoker les images dans le fichier /config/services.yaml : 
+```yaml
+parameters:
+    files: '%kernel.project_dir%/public/uploads/images'
+```
+
+dans le controller, pour ajouter une image lorsque l'on créer un artiste
+```php
+$artiste = $form->getData();
+$image = $form->get('image')->getData();
+
+if($image){
+    $orginalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+    $newFile = $sluggerInterface->slug($orginalName). '-'.uniqid().'.'.$image->guessExtension();
+    try{
+        $image->move(
+            $this->getParameter('files'),
+            $newFile
+        );
+
+    }catch(FileException $e){
+        throw new \Exception($e);
+    }
+    $artiste->setImage($newFile);
+}
+```
+
+pour éditer un artiste, j'ai repris le code ci-dessus, et j'ai ajouter le suivant pour changer l'image et la supprimer de notre dossier où les stock :
+```php
+ if ($previousImage != $newImage && $previousImage !="") {
+    $racine = $this->getParameter('files');
+    // dd($this->getParameter('files'));
+    $completePath = $racine .'/'. $previousImage;
+    unlink($completePath);
+}
+```
+
+et enfin, dans la fonction delete, j'ajoute juste : 
+```php
+if (is_file($completePath)) {
+
+    unlink($completePath);
+}
+```
+
+Il faudrait créer un service pour éviter de copier ces morceaux de code dans les autres controllers qui vont gérer des images.
+
+Comme le Tp est sur un seul jour, je vais essayer que tout fonctionne et si j'ai le temps je me pencherais sur le service.
+
+
+## rendu en JSON
+
+c'est prévu dans le OeuvreController avec les routes :
+```
+/oeuvres
+/oeuvre/{id}
+```
+mais problèmes avec les références circulaires.
+
+ça fait une piste à suivre pour s'améliorer en symfony, mais là, j'ai pas trop le temps.
+
+## tentative d'un service
+
+avec une fonction bid($prix) pour enchérir,
+mais s'en rendu j'ai du mal à l'utiliser.
+
+Une autre fois avec plus de temps.
 
 ## front-end
+
+### sidebar
+
+création d'un partials pour la sidebar, on l'inclue ensuite dans la base
+```twig
+{% include "partials/_sidebar.html.twig" %}
+```
 
 ### Bootstrap form
 
@@ -95,12 +185,12 @@ Ajout de cette ligne dans /config/packages/twig.yaml.
 Permet d'avoir des formulaire bootstrap dans l'ensemble de l'application
 Pour avoir un minimum de CSS pour l'admin.
 
-# récupération des éléments important de l'énoncé.
+# récupération des éléments important de l'énoncé. Inutile au correcteur
 
 récupérer des informations sur les œuvres exposées
 
  sélectionner une œuvre sur la tablette et
-ainsi pouvoir récupérer un maximum d’informations la concernan
+ainsi pouvoir récupérer un maximum d’informations la concernant
 
 les hôtes et hôtesses de
 l’événement devront se charger de logger l’utilisateur avant de lui remettre sa tablette

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Artiste index{% endblock %}
+
+{% block body %}
+    <h1>Artiste index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Image</th>
+                <th>Email</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for artiste in artistes %}
+            <tr>
+                <td>{{ artiste.id }}</td>
+                <td>{{ artiste.nom }}</td>
+                <td>{{ artiste.image }}</td>
+                <td>{{ artiste.email }}</td>
+                <td>
+                    <a class="btn btn-info" href="{{ path('artiste_show', {'id': artiste.id}) }}">show</a>
+                    <a class="btn btn-warning" href="{{ path('artiste_edit', {'id': artiste.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-success" href="{{ path('artiste_new') }}">Create new</a>
+{% endblock %}

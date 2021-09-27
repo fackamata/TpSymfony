@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Oeuvre index{% endblock %}
+
+{% block body %}
+    <h1>Oeuvre index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>DateCreation</th>
+                <th>Prix</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for oeuvre in oeuvres %}
+            <tr>
+                <td>{{ oeuvre.id }}</td>
+                <td>{{ oeuvre.nom }}</td>
+                <td>{{ oeuvre.description }}</td>
+                <td>{{ oeuvre.image }}</td>
+                <td>{{ oeuvre.dateCreation ? oeuvre.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ oeuvre.prix }}</td>
+                <td>
+                    <a class="btn btn-info" href="{{ path('oeuvre_show', {'id': oeuvre.id}) }}">show</a>
+                    <a class="btn btn-warning" href="{{ path('oeuvre_edit', {'id': oeuvre.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-success" href="{{ path('oeuvre_new') }}">Create new</a>
+{% endblock %}

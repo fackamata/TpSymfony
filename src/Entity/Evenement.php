@@ -78,6 +78,11 @@ class Evenement
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return $this->getNom();
+    }
+
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;

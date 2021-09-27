@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lieu index{% endblock %}
+
+{% block body %}
+        <h1>Lieu index</h1>
+    
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Addresse</th>
+                    <th>CodePostal</th>
+                    <th>Ville</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for lieu in lieus %}
+                <tr>
+                    <td>{{ lieu.id }}</td>
+                    <td>{{ lieu.nom }}</td>
+                    <td>{{ lieu.addresse }}</td>
+                    <td>{{ lieu.codePostal }}</td>
+                    <td>{{ lieu.ville }}</td>
+                    <td>
+                        <a class="btn btn-info" href="{{ path('lieu_show', {'id': lieu.id}) }}">show</a>
+                        <a class="btn btn-warning" href="{{ path('lieu_edit', {'id': lieu.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    
+        <a class="btn btn-info" href="{{ path('lieu_new') }}">Create new</a>
+
+{% endblock %}

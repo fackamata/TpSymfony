@@ -66,6 +66,11 @@ class Lieu
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return $this->getNom();
+    }
+    
     public function getAddresse(): ?string
     {
         return $this->addresse;

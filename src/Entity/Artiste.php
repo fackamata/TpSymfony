@@ -61,6 +61,11 @@ class Artiste
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return $this->getNom();
+    }
+
     public function getImage(): ?string
     {
         return $this->image;
