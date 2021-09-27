@@ -18,7 +18,7 @@ class Encheres
     public function bid($newPrice)
     {
         if ($newPrice > $this->prix){
-            $this->oeuvre->setPrix();
+            $this->oeuvre->setPrix($newPrice);
             return 'vous êtes actuellement l\enchère la plus haute';
         }else{
             return 'votre enchères n\'est pas assez élevée';
